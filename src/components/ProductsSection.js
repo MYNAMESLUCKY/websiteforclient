@@ -48,8 +48,8 @@ export default function ProductsSection() {
                 </a>
               </motion.div>
             )
-            : products.map((product, i) => (
-                <div key={i} className="bg-white dark:bg-black rounded-2xl shadow-2xl border border-green-100 dark:border-white p-4 sm:p-6 flex flex-col items-center gap-3 hover:shadow-2xl transition relative ring-1 ring-green-200/40 dark:ring-white/40">
+            : products.map((product) => (
+                <div key={product.id} className="bg-white dark:bg-black rounded-2xl shadow-2xl border border-green-100 dark:border-white p-4 sm:p-6 flex flex-col items-center gap-3 hover:shadow-2xl transition relative ring-1 ring-green-200/40 dark:ring-white/40">
                   <ProductCard product={product} darkMode />
                 </div>
               ))}

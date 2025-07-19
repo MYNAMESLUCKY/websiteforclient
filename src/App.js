@@ -9,6 +9,7 @@ import OnboardingTour from './components/OnboardingTour';
 import { AuthProvider } from './components/AuthProvider';
 import AuthUI from './components/AuthUI';
 import ProfilePage from './pages/ProfilePage';
+import AdminPage from './pages/AdminPage';
 
 // Animated blurred color blobs
 function AnimatedBlobs() {
@@ -364,6 +365,7 @@ function App() {
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/admin" element={<AdminPage />} />
               </Routes>
             </div>
           </main>
