@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
 import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
@@ -16,8 +17,34 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
-  const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
-  const signup = (email, password) => createUserWithEmailAndPassword(auth, email, password);
+  // Enhanced login: ensure user doc exists after login
+  const login = async (email, password) => {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    const userDocRef = doc(db, 'users', user.uid);
+    const userDocSnap = await getDoc(userDocRef);
+    if (!userDocSnap.exists()) {
+      await setDoc(userDocRef, {
+        email: user.email,
+        role: 'user', // Change to 'admin' manually in Firestore if needed
+        createdAt: new Date()
+      });
+    }
+    return userCredential;
+  };
+
+  // Enhanced signup: always create user doc
+  const signup = async (email, password) => {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    await setDoc(doc(db, 'users', user.uid), {
+      email: user.email,
+      role: 'user', // Change to 'admin' manually in Firestore if needed
+      createdAt: new Date()
+    });
+    return userCredential;
+  };
+
   const logout = () => signOut(auth);
 
   return (
