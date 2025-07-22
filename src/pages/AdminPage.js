@@ -22,6 +22,11 @@ export default function AdminPage() {
         const userDoc = await import('firebase/firestore').then(firestore =>
           firestore.getDoc(firestore.doc(db, 'users', user.uid))
         );
+        console.log("User UID:", user.uid);
+        console.log("UserDoc.exists:", userDoc.exists);
+        if (userDoc.exists) {
+          console.log("UserDoc.data():", userDoc.data());
+        }
         if (userDoc.exists && userDoc.data().role === 'admin') {
           setIsAdmin(true);
         } else {
