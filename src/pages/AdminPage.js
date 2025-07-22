@@ -16,11 +16,20 @@ export default function AdminPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (user) {
-      user.getIdTokenResult().then(tokenResult => {
-        setIsAdmin(!!tokenResult.claims.admin);
-      });
+    async function checkAdmin() {
+      if (user) {
+        // Check Firestore for role field
+        const userDoc = await import('firebase/firestore').then(firestore =>
+          firestore.getDoc(firestore.doc(db, 'users', user.uid))
+        );
+        if (userDoc.exists && userDoc.data().role === 'admin') {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
+      }
     }
+    checkAdmin();
   }, [user]);
 
   useEffect(() => {
